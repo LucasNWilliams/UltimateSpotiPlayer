@@ -1,30 +1,19 @@
 <template>
 <h1>Hello World</h1>
-  <button @click="getToken">test</button>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { GetToken, redirectToSpotifyAuthorizeEndpoint } from "@/API/api.ts";
-
-let accessToken: string | null = ''
+import { onMounted } from 'vue'
+import {checkSpotifyAuthorization} from "@/API/api.ts";
 
 
 const urlParams = new URLSearchParams(window.location.search);
-const code = ref(urlParams.get('code'));
+const code: string = urlParams.get('code')
 
-function getToken() {
-  redirectToSpotifyAuthorizeEndpoint()
-}
+const test = ref()
 
 onMounted(() => {
-  if (localStorage.getItem('token') !== 'undefined') {
-    accessToken = localStorage.getItem('token')
-  } else {
-    GetToken(code)
-  }
-  accessToken = localStorage.getItem('token')
-  console.log(accessToken)
+  checkSpotifyAuthorization(code)
 })
 </script>
 
