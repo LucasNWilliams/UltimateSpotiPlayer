@@ -6,11 +6,8 @@
 import { onMounted } from 'vue'
 import {checkSpotifyAuthorization} from "@/API/api.ts";
 
-
 const urlParams = new URLSearchParams(window.location.search);
 const code: string = urlParams.get('code')
-
-const test = ref()
 
 onMounted(() => {
   checkSpotifyAuthorization(code)
