@@ -47,10 +47,10 @@ const generateUrlWithSearchParams = (url: URL, params: URLSearchParams) => {
   return urlObject.toString()
 }
 
-const redirectToSpotifyAuthorizeEndpoint = () => {
+const redirectToSpotifyAuthorizeEndpoint = async () => {
     const codeVerifier = generateRandomString(64)
 
-    generateCodeChallenge(codeVerifier)
+    await generateCodeChallenge(codeVerifier)
       .then((codeChallenge) => {
         window.localStorage.setItem('code_verifier', codeVerifier)
 
@@ -68,7 +68,7 @@ const redirectToSpotifyAuthorizeEndpoint = () => {
       })
 }
 
-const exchangeToken = (code: string) => {
+const exchangeToken = async (code: string) => {
   const codeVerifier = localStorage.getItem('code_verifier')
 
   const url = 'https://accounts.spotify.com/api/token'
@@ -86,7 +86,7 @@ const exchangeToken = (code: string) => {
     }),
   }
 
-  fetch(url, payload)
+  await fetch(url, payload)
     .then(addThrowErrorToFetch)
     .then((data) => {
       processTokenResponse(data)
@@ -118,19 +118,19 @@ const processTokenResponse = (data: IApiResponseType) => {
   localStorage.setItem('expires_at', expiresAt.toString())
 }
 
-const GetSpotifyAuthorization = () => {
+const GetSpotifyAuthorization = async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const code: string = urlParams.get('code')
 
   if (code) {
     // we have received the code from Spotify and will exchange it for an accessToken
-    exchangeToken(code)
+    await exchangeToken(code)
   } else if (accessToken && refreshToken && (expiresAt > Date.now())) {
     // we are authorized and reload our tokens from localStorage
-    GetUserData()
+    await GetUserData()
   } else {
-    // we are not logged in redirect to log in
-    redirectToSpotifyAuthorizeEndpoint()
+    // we are not logged in, redirect to log in
+    await redirectToSpotifyAuthorizeEndpoint()
   }
 }
 

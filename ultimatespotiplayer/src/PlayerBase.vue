@@ -2,7 +2,7 @@
   <div v-if="spotifyUser.display_name">
     <div>
       <h1>Welcome {{ spotifyUser.display_name }}</h1>
-      <img :src="spotifyUser.images ? spotifyUser.images[1].url : null" alt="Profile image">
+      <img :src="spotifyUser.images ? spotifyUser.images[1].url : null" alt="Profile image" class="user-profile-image">
     </div>
     <h2>Total Followers: {{ spotifyUser.followers.total }}</h2>
     <ol>
@@ -37,13 +37,17 @@ const getUserPlaylists = async () => {
     })
 }
 
-onMounted(() => {
-  GetSpotifyAuthorization()
-  getUserData()
-  getUserPlaylists()
+onMounted(async () => {
+  await GetSpotifyAuthorization()
+    .then(async () => {
+      await getUserData()
+      await getUserPlaylists()
+    })
 })
 </script>
 
 <style scoped>
-
+.user-profile-image {
+  border-radius: 50%;
+}
 </style>
