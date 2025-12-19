@@ -107,8 +107,6 @@ const addThrowErrorToFetch = async (response: Response) => {
 }
 
 const processTokenResponse = (data: IApiResponseType) => {
-  console.log(data)
-
   accessToken = data.access_token
   refreshToken = data.refresh_token
 

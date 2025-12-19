@@ -1,7 +1,9 @@
 import {ISpotifyPlaylistType} from "@/enums";
 
 const spotifyUrl = 'https://api.spotify.com/v1'
-const accessToken = sessionStorage.getItem('access_token')
+const accessToken = localStorage.getItem('access_token')
+// TODO App does not work first time when localStorage is empty
+//        most likely a timing issue
 
 const GetUserData = async () => {
   return await fetch(spotifyUrl + '/me', {
