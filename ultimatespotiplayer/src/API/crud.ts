@@ -1,4 +1,5 @@
 import type {IApiPayloadType, IApiResponseType} from "@/API/enums.ts";
+import {GetUserData} from "@/components/api";
 
 const clientId = '24e4d5e0bf7a4e56b2d6ef4a9afe0817'
 const redirectUri = 'http://[::1]:5173/callback'
@@ -6,18 +7,24 @@ const redirectUri = 'http://[::1]:5173/callback'
 // defines scope of api calls
 const scope = 'app-remote-control user-read-currently-playing playlist-read-private playlist-read-collaborative user-library-read user-read-email user-read-private'
 const authUrl = new URL("https://accounts.spotify.com/authorize")
-const spotifyUrl = 'https://api.spotify.com/v1'
 
 let accessToken: string | null = localStorage.getItem('access_token') || null
 let refreshToken: string | null = localStorage.getItem('refresh_token') || null
 
 let expiresAt: number | null = localStorage.getItem('expires_at') ? parseInt(localStorage.getItem('expires_at') || '') : null
 
+//region # Spotify Authentication
+
 // creates a string of random characters as a code verifier
 const generateRandomString = (length: number) => {
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const values = crypto.getRandomValues(new Uint8Array(length));
-  return values.reduce((acc, x) => acc + possible[x % possible.length], "");
+  let text = '';
+  const possible =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
 }
 
 // generates a code challenge in SHA256 format
@@ -61,7 +68,7 @@ const redirectToSpotifyAuthorizeEndpoint = () => {
       })
 }
 
-const exchangeToken = async (code) => {
+const exchangeToken = (code: string) => {
   const codeVerifier = localStorage.getItem('code_verifier')
 
   const url = 'https://accounts.spotify.com/api/token'
@@ -79,7 +86,7 @@ const exchangeToken = async (code) => {
     }),
   }
 
-  await fetch(url, payload)
+  fetch(url, payload)
     .then(addThrowErrorToFetch)
     .then((data) => {
       processTokenResponse(data)
@@ -87,7 +94,7 @@ const exchangeToken = async (code) => {
       window.history.replaceState({}, document.title, '/')
     })
     .catch((error) => {
-      console.error(error)
+      console.error("There was an error in exchanging the access token", error)
     })
 }
 
@@ -111,46 +118,30 @@ const processTokenResponse = (data: IApiResponseType) => {
   localStorage.setItem('access_token', accessToken)
   localStorage.setItem('refresh_token', refreshToken)
   localStorage.setItem('expires_at', expiresAt.toString())
-
-  getUserData()
 }
 
-const getUserData = () => {
-  fetch(spotifyUrl + '/me', {
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-    },
-  })
-    .then(async (response) => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        throw await response.json()
-      }
-    })
-    .then((data) => {
-      console.log(data)
-    })
-    .catch((error) => {
-      console.error(error)
-    })
-}
+const GetSpotifyAuthorization = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const code: string = urlParams.get('code')
 
-const checkSpotifyAuthorization = (code: string) => {
   if (code) {
     // we have received the code from Spotify and will exchange it for an accessToken
     exchangeToken(code)
-  } else if (accessToken && refreshToken && expiresAt) {
+  } else if (accessToken && refreshToken && (expiresAt > Date.now())) {
     // we are authorized and reload our tokens from localStorage
-    getUserData()
+    GetUserData()
   } else {
     // we are not logged in redirect to log in
     redirectToSpotifyAuthorizeEndpoint()
   }
 }
 
+//endregion
+
+
+
 export {
   exchangeToken,
   redirectToSpotifyAuthorizeEndpoint,
-  checkSpotifyAuthorization
+  GetSpotifyAuthorization,
 }
