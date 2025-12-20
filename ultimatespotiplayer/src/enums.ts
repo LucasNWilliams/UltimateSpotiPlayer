@@ -42,26 +42,6 @@ interface ISpotifyCopyrightType {
   type: string
 }
 
-export interface ISpotifyPlaylistType {
-  collaborative: boolean,
-  description: string,
-  external_urls: ISpotifyExternalUrlsType,
-  href: string,
-  id: string,
-  images: ISpotifyImageType[],
-  name: string,
-  owner: ISpotifyUserType,
-  primary_color: null,
-  public: boolean,
-  snapshot_id: string,
-  tracks: {
-    href: string,
-    total: number
-  },
-  type: string,
-  uri: string
-}
-
 export interface ISpotifyArtistType {
   external_urls: ISpotifyExternalUrlsType,
   href: string,
@@ -123,6 +103,27 @@ export interface ISpotifyAlbumType {
   genres: [],
   label: string,
   popularity: number
+}
+
+
+export interface ISpotifyPlaylistType {
+  collaborative: boolean,
+  description: string,
+  external_urls: ISpotifyExternalUrlsType,
+  href: string,
+  id: string,
+  images: ISpotifyImageType[],
+  name: string,
+  owner: ISpotifyUserType,
+  primary_color: null,
+  public: boolean,
+  snapshot_id: string,
+  tracks: {
+    href: string,
+    total: number
+  },
+  type: string,
+  uri: string
 }
 
 export interface IPageHeaderProps {
