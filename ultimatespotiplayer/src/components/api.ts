@@ -37,7 +37,7 @@ interface IPlaylistsDataType {
   total: number
 }
 
-const GetUserPlaylists = async (url = spotifyUrl + '/me/playlists', playlists = []): Promise<IPlaylistsDataType | never[]> => {
+const GetUserPlaylists = async (url = spotifyUrl + '/me/playlists', playlists = []): Promise<void | IPlaylistsDataType | never[]> => {
   return await fetch(url, {
     headers: {
       Authorization: 'Bearer ' + accessToken,

@@ -120,7 +120,7 @@ const processTokenResponse = (data: IApiResponseType) => {
 
 const GetSpotifyAuthorization = async () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const code: string = urlParams.get('code')
+  const code: string | null = urlParams.get('code')
 
   if (code) {
     // we have received the code from Spotify and will exchange it for an accessToken
