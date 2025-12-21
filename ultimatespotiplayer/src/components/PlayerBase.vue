@@ -65,10 +65,9 @@ const getUserAlbums = async () => {
 
 onMounted(async () => {
   await GetSpotifyAuthorization()
-    .then(() => {
-      getUserData()
-      getUserPlaylists()
-      getUserAlbums()
+    .then(async () => {
+      await getUserData()
+      await Promise.allSettled([getUserPlaylists(), getUserAlbums()])
     })
 })
 </script>
