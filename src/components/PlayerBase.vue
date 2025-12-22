@@ -26,9 +26,12 @@ const AlbumCard = defineAsyncComponent(() => import("@/components/Layout/AlbumCa
 const PlaylistCard = defineAsyncComponent(() => import("@/components/Layout/PlaylistCard.vue"))
 
 const spotifyUser = ref<ISpotifyUser>({})
+
 const userPlaylists = ref<ISpotifyPlaylist[]>([])
 const userAlbums = ref<IUserAlbum[]>([])
-const userLibrary = ref<(ISpotifyPlaylist | IUserAlbum)[]>([])
+
+type IUserLibrary = Array<ISpotifyPlaylist | IUserAlbum>
+const userLibrary = ref<IUserLibrary>([])
 
 const instanceOfPlaylist = (item: ISpotifyPlaylist | ISpotifyAlbum): item is ISpotifyPlaylist => {
   return 'owner' in item

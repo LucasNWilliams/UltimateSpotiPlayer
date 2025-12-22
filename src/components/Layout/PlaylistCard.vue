@@ -2,7 +2,7 @@
   <ItemCard :title="playlist.name"
             :artists="[playlist.owner.display_name]"
             :image="playlistImage"
-            :item-type="playlistItemType"/>
+            :item-type="playlist.type"/>
 </template>
 
 <script setup lang="ts">
@@ -15,7 +15,6 @@ interface IPlaylistCardProps {
 }
 
 const props = defineProps<IPlaylistCardProps>()
-const playlistItemType = 'Playlist'
 
 const playlistImage = computed(() => {
   return props.playlist.images ? props.playlist.images[0] : {} as ISpotifyImage
