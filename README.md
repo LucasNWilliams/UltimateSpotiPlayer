@@ -1,1 +1,1 @@
-# UltimateSpotiPlayer
+# UltimateMusicPlayer
