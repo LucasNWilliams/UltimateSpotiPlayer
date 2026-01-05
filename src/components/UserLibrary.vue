@@ -5,7 +5,8 @@
       <ul class="library-list">
         <li v-for="item in userLibrary" :key="item.id">
           <AlbumCard v-if="instanceOfAlbum(item)"
-                     :album="item"/>
+                     :album="item"
+                     @click="redirectToAlbum(item)"/>
           <PlaylistCard v-else-if="instanceOfPlaylist(item)"
                         :playlist="item"/>
         </li>
@@ -17,9 +18,16 @@
 <script setup lang="ts">
 import {defineAsyncComponent, onMounted, ref} from 'vue'
 import { GetSpotifyAuthorization } from "@/API/spotifyAuthentication";
-import {ISpotifyAlbum, ISpotifyPlaylist, ISpotifyUser, IUserAlbum} from "@/spotifyDataTypeEnums";
+import {
+  ISpotifyAlbum,
+  ISpotifyAlbumsData,
+  ISpotifyPlaylist,
+  ISpotifyUser,
+  IUserAlbum
+} from "@/spotifyDataTypeEnums";
 import {GetUserData, GetUserPlaylists, GetUserAlbums} from "@/components/api";
-import PageHeader from "@/components/Layout/PageHeader.vue";
+import {useRouter} from "vue-router";
+import {SpotifyCollections} from "@/router";
 
 const AlbumCard = defineAsyncComponent(() => import("@/components/Layout/AlbumCard.vue"))
 const PlaylistCard = defineAsyncComponent(() => import("@/components/Layout/PlaylistCard.vue"))
@@ -32,12 +40,34 @@ const userAlbums = ref<IUserAlbum[]>([])
 type IUserLibrary = Array<ISpotifyPlaylist | IUserAlbum>
 const userLibrary = ref<IUserLibrary>([])
 
-const instanceOfPlaylist = (item: ISpotifyPlaylist | ISpotifyAlbum): item is ISpotifyPlaylist => {
+const instanceOfPlaylist = (item: ISpotifyPlaylist | IUserAlbum): item is ISpotifyPlaylist => {
   return 'owner' in item
 }
 
-const instanceOfAlbum = (item: ISpotifyPlaylist | ISpotifyAlbum): item is ISpotifyAlbum => {
+const instanceOfAlbum = (item: ISpotifyPlaylist | IUserAlbum): item is IUserAlbum => {
   return 'album' in item
+}
+
+const router = useRouter()
+
+const redirectToAlbum = (album: IUserAlbum) => {
+  router.push(
+    {
+      name: SpotifyCollections.Album,
+      params: {
+        albumId: album.album.id
+      }
+    })
+}
+
+const redirectToPlaylist = (playlist: ISpotifyPlaylist) => {
+  router.push(
+    {
+      name: SpotifyCollections.Playlist,
+      params: {
+        playlistId: playlist.id
+      }
+    })
 }
 
 const getUserData = async () => {

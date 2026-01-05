@@ -5,7 +5,7 @@ export enum UserRoutes {
   UserLibrary = 'User UserLibrary',
 }
 
-export enum Collections {
+export enum SpotifyCollections {
   Album = 'Collection Album',
   Playlist = 'Collection Playlist',
 }
@@ -26,11 +26,12 @@ const routes = [
       },
       {
         path: '/album/:albumId',
-        name: Collections.Album,
+        name: SpotifyCollections.Album,
+        component: () => import('@/components/Collections/AlbumView.vue'),
       },
       {
         path: '/playlist/:playlistId',
-        name: Collections.Playlist,
+        name: SpotifyCollections.Playlist,
       }
     ]
   },
