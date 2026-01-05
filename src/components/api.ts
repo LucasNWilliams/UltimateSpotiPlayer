@@ -1,4 +1,5 @@
 import {ISpotifyAlbum, ISpotifyPlaylist, IUserAlbum} from "@/spotifyDataTypeEnums";
+import {GetSpotifyAuthorization} from "@/API/spotifyAuthentication";
 
 const spotifyUrl = 'https://api.spotify.com/v1'
 let accessToken: string | null
@@ -16,7 +17,13 @@ const GetUserData = async () => {
       if (response.ok) {
         return response.json()
       } else {
-        throw await response.json()
+        GetSpotifyAuthorization()
+          .then(() => {
+            return GetUserData()
+          })
+          .catch((error) => {
+            console.error("Could not authorize GetUserData:", error)
+          })
       }
     })
     .then((data) => {
@@ -37,7 +44,13 @@ const GetUserPlaylists = async (url = spotifyUrl + '/me/playlists', playlists: I
       if (response.ok) {
         return response.json()
       } else {
-        throw await response.json()
+        GetSpotifyAuthorization()
+          .then(() => {
+            return GetUserPlaylists()
+          })
+          .catch((error) => {
+            console.error("Could not authorize GetUserPlaylists:", error)
+          })
       }
     })
     // TODO Make so it returns then runs after
@@ -64,7 +77,13 @@ const GetUserAlbums = async (url = spotifyUrl + '/me/albums', albums: ISpotifyAl
     if (response.ok) {
       return response.json()
     } else {
-      throw await response.json()
+      GetSpotifyAuthorization()
+        .then(() => {
+          return GetUserAlbums()
+        })
+        .catch((error) => {
+          console.error("Could not authorize GetUserAlbums:", error)
+        })
     }
   })
     .then((data) => {
@@ -80,8 +99,30 @@ const GetUserAlbums = async (url = spotifyUrl + '/me/albums', albums: ISpotifyAl
     })
 }
 
+const GetAlbum = async (albumId: string) => {
+  return await fetch(spotifyUrl + '/albums/' + albumId, {
+    headers: {
+      Authorization: 'Bearer ' + accessToken,
+    }
+  })
+  .then(async (response) => {
+    if (response.ok) {
+      return response.json()
+    } else {
+      GetSpotifyAuthorization()
+        .then(() => {
+          return GetAlbum(albumId)
+        })
+        .catch((error) => {
+          console.error("Could not get album:", error)
+        })
+    }
+  })
+}
+
 export {
   GetUserData,
   GetUserPlaylists,
-  GetUserAlbums
+  GetUserAlbums,
+  GetAlbum
 }
