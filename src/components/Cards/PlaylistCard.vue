@@ -1,12 +1,12 @@
 <template>
-  <ItemCard :title="playlist.name"
+  <CollectionCard :title="playlist.name"
             :artists="[playlist.owner.display_name]"
             :image="playlistImage"
             :item-type="playlist.type"/>
 </template>
 
 <script setup lang="ts">
-import ItemCard from "@/components/Base/ItemCard.vue";
+import CollectionCard from "@/components/Cards/CollectionCard.vue";
 import {ISpotifyImage, ISpotifyPlaylist} from "@/spotifyDataTypeEnums";
 import {computed} from "vue";
 

@@ -11,9 +11,10 @@
 <script setup lang="ts">
 import PageHeader from "@/components/Layout/PageHeader.vue";
 import {GetUserData} from "@/components/api";
-import {onMounted, ref} from "vue";
+import {onBeforeMount, ref, watch} from "vue";
 import {ISpotifyUser} from "@/spotifyDataTypeEnums";
 import {GetSpotifyAuthorization} from "@/API/spotifyAuthentication";
+import {useRoute} from "vue-router";
 
 const spotifyUser = ref<ISpotifyUser>({})
 
@@ -24,7 +25,16 @@ const getUserData = async () => {
     })
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
+  await GetSpotifyAuthorization()
+    .then(async () => {
+      await getUserData()
+    })
+})
+
+const route = useRoute()
+
+watch(route, async () => {
   await GetSpotifyAuthorization()
     .then(async () => {
       await getUserData()

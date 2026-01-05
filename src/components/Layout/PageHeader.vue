@@ -1,23 +1,43 @@
 <template>
   <div class="page-header">
     <div class="page-header-left">
-      <img src="../../assets/mediumLogo.png" alt="Medium Ultimate SpotiPlayer Logo" class="logo-medium"/>
+      <img src="../../assets/mediumLogo.png"
+           alt="Medium Ultimate SpotiPlayer Logo"
+           class="logo-medium"/>
+    </div>
+    <div class="page-header-center">
+      <button @click="redirectToHome">test</button>
     </div>
     <div class="page-header-right">
       <p>{{ spotifyUser.display_name }}</p>
-      <img :src="spotifyUser.images ? spotifyUser.images[1].url : undefined" alt="User Profile Image" class="user-profile-image">
+      <img :src="userProfileImage"
+           alt="User Profile Image"
+           class="user-profile-image">
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import {ISpotifyUser} from "@/spotifyDataTypeEnums";
+import {computed} from "vue";
+import {useRouter} from "vue-router";
 
 interface IPageHeaderProps {
   spotifyUser: ISpotifyUser
 }
 
 const props = defineProps<IPageHeaderProps>()
+
+const userProfileImage = computed(() => {
+  return props.spotifyUser.images ? props.spotifyUser.images[1].url : undefined
+})
+
+const router = useRouter()
+
+const redirectToHome = () => {
+  router.push('/')
+}
+
 </script>
 
 <style scoped>

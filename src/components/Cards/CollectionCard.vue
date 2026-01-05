@@ -44,6 +44,7 @@ const artistsNames = props.artists.join(', ')
   margin: 1rem;
   background-color: #252930;
   width: 24rem;
+  cursor: pointer;
 
   .header {
     display: flex;

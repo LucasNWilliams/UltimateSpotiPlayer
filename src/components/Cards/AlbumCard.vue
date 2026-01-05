@@ -1,13 +1,13 @@
 <template>
-  <ItemCard :title="album.album.name"
+  <CollectionCard :title="album.album.name"
             :artists="albumArtists"
             :image="albumImage"
             :item-type="album.album.album_type">
-  </ItemCard>
+  </CollectionCard>
 </template>
 
 <script setup lang="ts">
-import ItemCard from "@/components/Base/ItemCard.vue";
+import CollectionCard from "@/components/Cards/CollectionCard.vue";
 import {ISpotifyArtist, ISpotifyImage, IUserAlbum} from "@/spotifyDataTypeEnums";
 import {computed} from "vue";
 

@@ -1,6 +1,5 @@
 <template>
   <div v-if="spotifyUser.display_name">
-
     <div class="page-body">
       <ul class="library-list">
         <li v-for="item in userLibrary" :key="item.id">
@@ -29,10 +28,10 @@ import {GetUserData, GetUserPlaylists, GetUserAlbums} from "@/components/api";
 import {useRouter} from "vue-router";
 import {SpotifyCollections} from "@/router";
 
-const AlbumCard = defineAsyncComponent(() => import("@/components/Layout/AlbumCard.vue"))
-const PlaylistCard = defineAsyncComponent(() => import("@/components/Layout/PlaylistCard.vue"))
+const AlbumCard = defineAsyncComponent(() => import("@/components/Cards/AlbumCard.vue"))
+const PlaylistCard = defineAsyncComponent(() => import("@/components/Cards/PlaylistCard.vue"))
 
-const spotifyUser = ref<ISpotifyUser>({})
+const spotifyUser = ref<ISpotifyUser>({} as ISpotifyUser)
 
 const userPlaylists = ref<ISpotifyPlaylist[]>([])
 const userAlbums = ref<IUserAlbum[]>([])
@@ -96,11 +95,8 @@ const getUserAlbums = async () => {
 }
 
 onMounted(async () => {
-  await GetSpotifyAuthorization()
-    .then(async () => {
-      await getUserData()
-      await Promise.allSettled([getUserPlaylists(), getUserAlbums()])
-    })
+    await getUserData()
+    await Promise.allSettled([getUserPlaylists(), getUserAlbums()])
 })
 </script>
 
