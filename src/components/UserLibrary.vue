@@ -1,6 +1,5 @@
 <template>
   <div v-if="spotifyUser.display_name">
-    <PageHeader :spotify-user="spotifyUser"/>
 
     <div class="page-body">
       <ul class="library-list">
